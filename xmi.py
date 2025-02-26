@@ -3,7 +3,7 @@ import platform
 import os
 import time
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import json
 
 class CommandManager:
@@ -88,18 +88,38 @@ class CommandManager:
         # 对话框居中
         self.center_window(dialog)
         
-        # 输入框
-        ttk.Label(dialog, text="目录:").grid(row=0, column=0, sticky=tk.W, padx=5, pady=5)
+        # 创建主框架并添加内边距
+        main_frame = ttk.Frame(dialog, padding="10")
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # 创建变量
         dir_var = tk.StringVar()
-        ttk.Entry(dialog, textvariable=dir_var, width=50).grid(row=0, column=1, padx=5, pady=5)
-        
-        ttk.Label(dialog, text="命令:").grid(row=1, column=0, sticky=tk.W, padx=5, pady=5)
         cmd_var = tk.StringVar()
-        ttk.Entry(dialog, textvariable=cmd_var, width=50).grid(row=1, column=1, padx=5, pady=5)
-        
-        ttk.Label(dialog, text="名称:").grid(row=2, column=0, sticky=tk.W, padx=5, pady=5)
         name_var = tk.StringVar()
-        ttk.Entry(dialog, textvariable=name_var, width=50).grid(row=2, column=1, padx=5, pady=5)
+        
+        # 目录选择框架
+        dir_frame = ttk.Frame(main_frame)
+        dir_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(dir_frame, text="目录:", width=8).pack(side=tk.LEFT)
+        dir_entry = ttk.Entry(dir_frame, textvariable=dir_var)
+        dir_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 5))
+        ttk.Button(dir_frame, text="浏览", command=lambda: self.browse_directory(dir_var, dialog)).pack(side=tk.LEFT)
+        
+        # 命令输入框架
+        cmd_frame = ttk.Frame(main_frame)
+        cmd_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(cmd_frame, text="命令:", width=8).pack(side=tk.LEFT)
+        ttk.Entry(cmd_frame, textvariable=cmd_var).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 0))
+        
+        # 名称输入框架
+        name_frame = ttk.Frame(main_frame)
+        name_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(name_frame, text="名称:", width=8).pack(side=tk.LEFT)
+        ttk.Entry(name_frame, textvariable=name_var).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 0))
+        
+        # 按钮框架
+        button_frame = ttk.Frame(main_frame)
+        button_frame.pack(fill=tk.X, pady=(10, 0))
         
         def save_command():
             dir_path = dir_var.get().strip()
@@ -114,8 +134,13 @@ class CommandManager:
             else:
                 messagebox.showwarning("警告", "请填写所有字段", parent=dialog)
         
-        ttk.Button(dialog, text="保存", command=save_command).grid(row=3, column=1, sticky=tk.E, padx=5, pady=10)
+        ttk.Button(button_frame, text="保存", command=save_command).pack(side=tk.RIGHT)
 
+    def browse_directory(self, dir_var, parent):
+        directory = filedialog.askdirectory(parent=parent)
+        if directory:
+            dir_var.set(directory)
+    
     def edit_command(self, event):
         """编辑命令"""
         item = self.tree.identify_row(event.y)
@@ -135,18 +160,38 @@ class CommandManager:
         # 对话框居中
         self.center_window(dialog)
         
-        # 输入框
-        ttk.Label(dialog, text="目录:").grid(row=0, column=0, sticky=tk.W, padx=5, pady=5)
+        # 创建主框架并添加内边距
+        main_frame = ttk.Frame(dialog, padding="10")
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # 创建变量
         dir_var = tk.StringVar(value=current_cmd[0])
-        ttk.Entry(dialog, textvariable=dir_var, width=50).grid(row=0, column=1, padx=5, pady=5)
-        
-        ttk.Label(dialog, text="命令:").grid(row=1, column=0, sticky=tk.W, padx=5, pady=5)
         cmd_var = tk.StringVar(value=current_cmd[1])
-        ttk.Entry(dialog, textvariable=cmd_var, width=50).grid(row=1, column=1, padx=5, pady=5)
-        
-        ttk.Label(dialog, text="名称:").grid(row=2, column=0, sticky=tk.W, padx=5, pady=5)
         name_var = tk.StringVar(value=current_cmd[2])
-        ttk.Entry(dialog, textvariable=name_var, width=50).grid(row=2, column=1, padx=5, pady=5)
+        
+        # 目录选择框架
+        dir_frame = ttk.Frame(main_frame)
+        dir_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(dir_frame, text="目录:", width=8).pack(side=tk.LEFT)
+        dir_entry = ttk.Entry(dir_frame, textvariable=dir_var)
+        dir_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 5))
+        ttk.Button(dir_frame, text="浏览", command=lambda: self.browse_directory(dir_var, dialog)).pack(side=tk.LEFT)
+        
+        # 命令输入框架
+        cmd_frame = ttk.Frame(main_frame)
+        cmd_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(cmd_frame, text="命令:", width=8).pack(side=tk.LEFT)
+        ttk.Entry(cmd_frame, textvariable=cmd_var).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 0))
+        
+        # 名称输入框架
+        name_frame = ttk.Frame(main_frame)
+        name_frame.pack(fill=tk.X, pady=(0, 10))
+        ttk.Label(name_frame, text="名称:", width=8).pack(side=tk.LEFT)
+        ttk.Entry(name_frame, textvariable=name_var).pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(5, 0))
+        
+        # 按钮框架
+        button_frame = ttk.Frame(main_frame)
+        button_frame.pack(fill=tk.X, pady=(10, 0))
         
         def update_command():
             dir_path = dir_var.get().strip()
@@ -161,7 +206,7 @@ class CommandManager:
             else:
                 messagebox.showwarning("警告", "请填写所有字段", parent=dialog)
         
-        ttk.Button(dialog, text="保存", command=update_command).grid(row=3, column=1, sticky=tk.E, padx=5, pady=10)
+        ttk.Button(button_frame, text="保存", command=update_command).pack(side=tk.RIGHT)
 
     def update_tree(self):
         """更新表格数据"""
